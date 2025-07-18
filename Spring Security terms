@@ -1,0 +1,102 @@
+
+
+### 🔒 1. **Authentication**
+
+* Verifies **who the user is** (e.g., username & password).
+* Handled by `AuthenticationManager`.
+* Example: Login form authentication.
+
+---
+
+### 🔐 2. **Authorization**
+
+* Decides **what the user can access** (based on roles).
+* Example: Only `ADMIN` can access `/admin`.
+
+---
+
+### 📦 3. **Security Context**
+
+* Stores user info after login during the session.
+* Accessed via `SecurityContextHolder`.
+
+---
+
+### 👤 4. **Principal**
+
+* The **logged-in user’s identity**, usually a `UserDetails` object.
+* Example: `getAuthentication().getPrincipal()`.
+
+---
+
+### 🛡 5. **Authorities**
+
+* User’s **roles/permissions** (e.g., `ROLE_USER`, `ROLE_ADMIN`).
+* Used to control access.
+
+---
+
+### 🔄 6. **AuthenticationManager**
+
+* The **main engine** that checks credentials.
+* Delegates to `AuthenticationProvider`.
+
+---
+
+### 🧑‍💻 7. **UserDetailsService**
+
+* Loads user data from DB or memory.
+* Returns `UserDetails` object (username, password, roles).
+
+---
+
+### 🔐 8. **PasswordEncoder**
+
+* Hashes and verifies passwords securely.
+* Example: `BCryptPasswordEncoder`.
+
+---
+
+### 🧱 9. **SecurityFilterChain**
+
+* A chain of filters that handle authentication and authorization.
+* Defines access rules in your config.
+
+---
+
+### 🛡 10. **CSRF Protection**
+
+* Prevents unwanted actions from trusted users’ browsers.
+* Enabled by default in Spring Security.
+
+---
+
+### 🧾 11. **Session Management**
+
+* Controls session behavior (e.g., single login per user).
+* Example: `.maximumSessions(1)`.
+
+---
+
+### 🎯 12. **@PreAuthorize / @Secured**
+
+* Annotations for **method-level security**.
+* Example: `@PreAuthorize("hasRole('ADMIN')")`.
+
+---
+
+### 🧠 13. **Remember-Me Authentication**
+
+* Lets users stay logged in across browser sessions.
+* Uses cookies or tokens.
+
+---
+
+### ✅ 14. **AccessDecisionManager**
+
+* Evaluates if a user is allowed access.
+* Uses voters (like role checks or custom rules).
+
+---
+
+Let me know if you’d like a **PDF summary**, **visual chart**, or a **flashcard version**!
