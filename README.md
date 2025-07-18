@@ -105,4 +105,125 @@ Passionate Java & Full Stack Developer
 
 
 
+or 
+
+
+
+## 🚀 Application Flow – Spring Security Servlet Filter Demo
+
+### 🌐 Endpoint Example:
+
+Access via:
+📍 [`http://localhost:8080/filter-demo/public`](http://localhost:8080/filter-demo/public)
+
+---
+
+### ✅ Step-by-Step Execution Flow
+
+---
+
+### 1. **Application Initialization**
+
+When the application starts, **Tomcat 11** loads `web.xml`, which initializes:
+
+* 🔐 **`springSecurityFilterChain`** – core Spring Security filter.
+* 📋 **`LoggingFilter`** – custom filter that logs incoming requests.
+* 🚦 **`DispatcherServlet`** – bootstraps Spring context (`AppConfig`, `SecurityConfig`).
+
+Spring internally:
+
+* Configures **HTTP Basic Authentication**.
+* Registers endpoints `/hello`, `/admin`, and `/public` via `HelloController`.
+
+---
+
+### 2. **Client Sends a Request**
+
+The client accesses any of the defined endpoints:
+
+```
+http://localhost:8080/filter-demo/public
+http://localhost:8080/filter-demo/hello
+http://localhost:8080/filter-demo/admin
+```
+
+---
+
+### 3. **Spring Security Filter Chain**
+
+The `springSecurityFilterChain` intercepts the request and applies the access rules:
+
+| Endpoint  | Rule                                       |
+| --------- | ------------------------------------------ |
+| `/public` | ✅ No authentication required (open access) |
+| `/hello`  | 🔐 Requires login with role `ROLE_USER`    |
+| `/admin`  | 🔐 Requires login with role `ROLE_ADMIN`   |
+
+* If login is required, the browser shows a **Basic Auth prompt**.
+* The credentials (e.g., `user/vikas123`, `admin/admin@321`) are verified using `InMemoryUserDetailsManager`.
+* If invalid ➡️ `401 Unauthorized`
+* If role is insufficient ➡️ `403 Forbidden`
+
+---
+
+### 4. **Custom Logging Filter**
+
+If Spring Security allows the request, the `LoggingFilter` is triggered:
+
+* Logs:
+
+  ```bash
+  Request received from: 127.0.0.1
+  ```
+* Captures start time
+* Passes control using `chain.doFilter(...)`
+
+---
+
+### 5. **Request Handling by Spring MVC**
+
+The request reaches the `DispatcherServlet`, which routes it to the appropriate controller method:
+
+| URL       | Controller Method | Response HTML                                                  |
+| --------- | ----------------- | -------------------------------------------------------------- |
+| `/hello`  | `sayHello()`      | `<h1>Hello from Spring Controller! (USER access)</h1>`         |
+| `/admin`  | `adminPage()`     | `<h1>Welcome to Admin Page! (ADMIN access)</h1>`               |
+| `/public` | `publicPage()`    | `<h1>This is a Public Page! (No authentication required)</h1>` |
+
+---
+
+### 6. **Logging Filter Post-Processing**
+
+After the controller returns a response:
+
+* `LoggingFilter` logs:
+
+  ```bash
+  Request processed in 12 ms
+  ```
+
+---
+
+### 7. **Response Returned to Client**
+
+* The final HTML response is sent back to the browser.
+* If authentication or role is missing, browser shows an error (401 or 403).
+
+---
+
+### 🔁 Full Lifecycle Summary
+
+```mermaid
+graph TD
+A[Client sends request] --> B[Security Filter Chain]
+B -->|Authenticated + Authorized| C[Logging Filter logs request]
+C --> D[DispatcherServlet routes]
+D --> E[HelloController method called]
+E --> F[Logging Filter logs processing time]
+F --> G[Response sent to client]
+B -->|Not Authenticated| X[401 Unauthorized]
+B -->|Role Mismatch| Y[403 Forbidden]
+```
+
+
 
